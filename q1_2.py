@@ -49,7 +49,7 @@ def main():
             ties += 1
 
         print("Score")
-        print("You: ", wins, "Computer: ", losses, "Ties: ", ties, "\n")
+        print("You: ", wins ,"|", "Computer: ", losses,"|", "Ties: ", ties, "\n")
 
 if __name__ == "__main__":
     main()

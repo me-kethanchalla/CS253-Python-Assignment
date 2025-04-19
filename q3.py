@@ -14,30 +14,29 @@ functions = {
 def set_random_seed(seed) :
     np.random.seed(seed)
 
-
-
-def generate_dataset(N, x_min, x_max) :
-
-    X = np.random.uniform(low = x_min, high=x_max,size= N)
+def generate_dataset(N, x_min, x_max):
     
-    A = np.random.rand()
-    B = np.random.rand()
-    C = np.random.rand()
-    D = np.random.rand()
-    E = np.random.rand()
-    F = np.random.rand()
+    func_keys = list(functions.keys())
+    if x_min < 0:
+        # Exclude log if your X is negative
+        if 'log' in func_keys : 
+            func_keys.remove('log')
 
-    func = np.random.choice(list(functions.keys()), size = 3)
-    Y = []
-    for f in X :
+    
+    chosen = np.random.choice(func_keys, size=3, replace=True)
+    X = np.random.uniform(low=x_min, high=x_max, size=N)
 
-        f1 = functions[func[0]]
-        f2 = functions[func[1]]
-        f3 = functions[func[2]]
+    A, B, C, D, E, F = np.random.rand(6) #any 6 random values
 
-        Y.append(A*f1(B*f) +  C*f2(D*f) + E*f3(F*f))
+    Y = (
+        A * functions[chosen[0]](B * X) +
+        C * functions[chosen[1]](D * X) +
+        E * functions[chosen[2]](F * X)
+    )
 
-    return X.tolist(), Y
+    print("Randomly Chosen Functions are:" ,chosen[0] , chosen[1] , chosen[2] )
+
+    return X.tolist(), Y.tolist()
 
 
 
@@ -87,16 +86,18 @@ def line_plot(X,Y) :
 
 if __name__ == "__main__":
 
-    set_random_seed(42)
+    set_random_seed(42) # this will make sure that everytime the same 3 functions are selected
+    # if different functions set needed, we can either change or remove this feature. 
 
     N = input("Enter number of data points: ")
     N = int(N)
 
-    x_min = input("Enter min X :")
+    x_min = input("Enter min X :")  
     x_min = float(x_min)
     x_max = input("Enter max X :")
     x_max = float(x_max)
-
+    if (x_min >= x_max) : 
+        raise ValueError("Minimum of x should be less than maximum of x ")
     X, Y = generate_dataset(N, x_min, x_max)
     plot_scatter(X, Y)
     plot_histogram(X)
